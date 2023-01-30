@@ -1,14 +1,32 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use thiserror::Error;
+
+pub mod cache;
+
+mod access;
+mod utils;
+
+use std::{fmt::Display, sync::Arc};
+
+#[derive(Error, Debug, Eq, PartialEq, Clone, Hash)]
+pub struct CacheKey {
+    pub key: Arc<Vec<u8>>,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl Display for CacheKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // TODO revisit how we display keys
+        write!(f, "{:?}", self.key)
+    }
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+#[derive(Error, Debug, Eq, PartialEq, Clone)]
+pub struct CacheValue {
+    pub value: Option<Arc<Vec<u8>>>,
+}
+
+impl Display for CacheValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // TODO revisit how we display values
+        write!(f, "{:?}", self.value)
     }
 }
